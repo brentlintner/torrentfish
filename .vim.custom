@@ -1,0 +1,9 @@
+au BufRead,BufNewFile *.karma.conf setfiletype javascript
+set autoindent
+filetype plugin indent on
+autocmd FileType javascript set tabstop=2|set shiftwidth=2
+autocmd FileType css set tabstop=2|set shiftwidth=2
+autocmd FileType html set tabstop=2|set shiftwidth=2
+autocmd FileType stylus set tabstop=2|set shiftwidth=2
+autocmd FileType jade set tabstop=2|set shiftwidth=2
+autocmd FileType . set tabstop=2|set shiftwidth=2
