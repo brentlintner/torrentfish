@@ -1,21 +1,34 @@
 {
   "name": "torrentfish",
-  "version": "0.0.0",
-  "description": "A [torrent] feed parsing daemon.",
+  "version": "0.0.1",
+  "description": "A [torrent] feed parsing and notification daemon.",
   "homepage": "",
   "author": {
     "name": "Brent Lintner",
     "email": "brent.lintner@gmail.com"
   },
   "private": true,
-  "licenses": [{
+  "licenses": [
+    {
       "type": "MIT"
-  }],
+    }
+  ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:brentlintner/......git"
+    "url": "git@github.com:brentlintner/torrentfish.git"
   },
   "main": "lib/index.js",
-  "dependencies": {},
+  "bin": {
+    "torrentfish": "bin/torrentfish"
+  },
+  "dependencies": {
+    "feedparser": "~0.16.5",
+    "request": "2.33.0",
+    "nstore": "~0.5.2",
+    "optimist": "~0.6.0",
+    "minilog": "~2.0.3",
+    "nodemailer": "~0.6.0",
+    "prompt": "~0.2.12"
+  },
   "devDependencies": {}
 }

@@ -1,8 +1,17 @@
-This is a daemon that periodically checks TorrentDay RSS feeds,
-and places any torrent files based on a watch list into a folder.
+# torrentfish
 
-Should it also parse Films? Should is also organize stuff? (overboard?)
+A [torrent] feed parsing and notification daemon.
 
-Note
+Primarily to be used for:
 
-* make each parser (ex: torrentday vs piratebay) modular and decoupled?
+* Periodically checking [downloable link] rss feeds, and notifiying (via email).
+
+## Installation
+
+    npm install -g torrentfish
+
+## Usage Example(s)
+
+Log to file, poll every 30min, email every 2h, and run in background.
+
+    LOGFILE=temp.log torrentfish -u "http://../foo.rss" -i .5 -e 2 &

@@ -1,0 +1,5 @@
+.git
+node_modules
+.vim.custom
+*.db
+.torrentfish*
