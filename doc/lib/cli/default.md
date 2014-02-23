@@ -24,6 +24,6 @@ You can redirect the output to a file by setting the `LOGFILE` env variable.
 
 # Mailer Support
 
-You will be prompted for your mail information on demand.
+Can be specified in torrentfish file.
 
 For more information on what is supported, see [nodemailer smtp support](http://www.nodemailer.com/docs/smtp#well-known-services-for-smtp).

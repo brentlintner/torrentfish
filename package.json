@@ -23,12 +23,22 @@
   },
   "dependencies": {
     "feedparser": "~0.16.5",
-    "request": "2.33.0",
-    "nstore": "~0.5.2",
+    "request": "2.34.0",
     "optimist": "~0.6.0",
     "minilog": "~2.0.3",
     "nodemailer": "~0.6.0",
-    "prompt": "~0.2.12"
+    "dirty": "~0.9.9"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "jshint": "~2.4.4",
+    "chai": "~1.9.0",
+    "mocha": "~1.17.1",
+    "police": "~0.3.2",
+    "istanbul": "~0.2.4",
+    "sinon": "1.9.0",
+    "sinon-chai": "~2.5.0",
+    "colors": "~0.6.2",
+    "express": "~3.4.8",
+    "shelljs": "~0.2.6"
+  }
 }

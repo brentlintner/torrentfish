@@ -9,7 +9,7 @@
   "expr": true,
   "loopfunc": true,
   "maxstatements": 30,
-  "maxcomplexity": 10,
+  "maxcomplexity": 8,
   "maxlen": 110,
   "maxparams": 5,
   "maxdepth": 4,
@@ -22,9 +22,8 @@
   "eqeqeq": false,
 
   "globals": {
-      "$": false,
       "require": false,
-      "expect": false,
+      "expect": true,
       "jake": false,
       "define": false,
       "describe": false,
