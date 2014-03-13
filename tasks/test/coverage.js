@@ -1,30 +1,88 @@
 var
   path = require('path'),
+  shell = require('shelljs'),
+  async = require('async'),
   child_process = require('child_process'),
   express = require('express'),
+  cov_dir = path.join(__dirname, '..', '..', 'coverage'),
   istanbul = path.join(__dirname, "..", "..", "node_modules", ".bin", "istanbul"),
-  lcov_report = path.join(__dirname, "..", "..", "coverage", "lcov-report"),
-  port = 4002
+  jake = path.join(__dirname, "..", "..", "node_modules", ".bin", "jake")
 
 require('colors')
 
-function test_with_cov(type) {
-  var args = ("cover -x **/tasks/** jake -- test:" + (type || "all")).split(" ")
+function cleanup(callback) {
+  shell.rm('-r', cov_dir)
+  callback()
+}
 
-  // TODO: don't spawn for system.. just spawn regular with ENV variable set
+function run_unit(callback) {
+  var args = ("cover -x **/tasks/** --dir coverage/unit jake -- test:unit").split(" ")
   child_process
     .spawn(istanbul, args, {stdio: "inherit"})
-    .on("exit", function () {
-      express()
-        .use(express.static(lcov_report))
-        .listen(port)
+    .on("exit", callback)
+}
 
-      console.log()
-      console.log("lcov".green + " report ready.")
-      console.log("  listening on: " + ("http://localhost:" + port).green)
-      console.log()
-      console.log("Note".red + ": this does not include system tests.")
+function run_integration(callback) {
+  var args = ("cover -x **/tasks/** --dir coverage/integration jake -- test:integration").split(" ")
+  child_process
+    .spawn(istanbul, args, {stdio: "inherit"})
+    .on("exit", callback)
+}
+
+function run_system(callback) {
+  // Note: see test/fixtures/cli for code that uses this
+  process.env.TEST_COV = true
+
+  child_process
+    .spawn(jake, ["test:system[list]"], {
+      stdio: "inherit",
+      env: process.env
     })
+    .on("exit", function (code) {
+      console.log('Note:'.red + ' System test summary not viewable via terminal.')
+      console.log()
+      callback(code)
+    })
+}
+
+function merge_reports(callback) {
+  var args = ("report --dir coverage").split(" ")
+  console.log("Merging".green + " any reports..")
+  child_process
+    .spawn(istanbul, args, {stdio: "inherit"})
+    .on("exit", callback)
+}
+
+function serve_results(callback) {
+  var
+    lcov_report = path.join(__dirname, "..", "..", "coverage", "lcov-report"),
+    port = 4002
+
+  express()
+    .use(express.static(lcov_report))
+    .listen(port)
+
+  console.log()
+  console.log("lcov".green + " report ready.")
+  console.log("  listening on: " + ("http://localhost:" + port).green)
+  console.log()
+  callback()
+}
+
+function test_with_cov(type) {
+  var cmds = [cleanup]
+
+  if (type == 'unit') cmds.push(run_unit)
+  else if (type == 'integration') cmds.push(run_integration)
+  else if (type == 'system') cmds.push(run_system)
+  else cmds = cmds.concat([run_unit, run_integration, run_system])
+
+  cmds = cmds.concat([
+    merge_reports,
+    serve_results
+  ])
+
+  async.series(cmds)
 }
 
 module.exports = test_with_cov

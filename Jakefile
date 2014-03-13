@@ -22,9 +22,6 @@ desc('runs unit tests')
 task('test', ['test:all'])
 
 namespace('test', function () {
-  desc('runs "jake test" with code coverage')
-  task('cov', use('test/coverage'))
-
   desc('runs all unit tests')
   task('unit', use('test/unit'), {async: true})
 
@@ -35,7 +32,10 @@ namespace('test', function () {
   task('system', use('test/system'), {async: true})
 
   desc('runs all testing (unit/integration/system)')
-  task('all', ['test:unit[dot]', 'test:integration[dot]', 'test:system[dot]'])
+  task('all', ['test:unit', 'test:integration', 'test:system'])
+
+  desc('runs tests with code coverage - test[type]')
+  task('cov', use('test/coverage'))
 })
 
 desc('displays stats')

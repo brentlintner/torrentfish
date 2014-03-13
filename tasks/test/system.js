@@ -12,7 +12,7 @@ module.exports = function (reporter, callback) {
     system_tests = path.join(__dirname, "..", "..", "test", "system"),
     runner = new Mocha({
       ui: "bdd",
-      reporter: reporter || 'spec',
+      reporter: reporter || 'dot',
       timeout: 10000,
       slow: 5000
     })

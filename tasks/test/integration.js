@@ -12,7 +12,7 @@ module.exports = function (reporter, callback) {
 
   var runner = new Mocha({
     ui: "bdd",
-    reporter: reporter || 'spec',
+    reporter: reporter || 'dot',
     timeout: 6000
   })
 

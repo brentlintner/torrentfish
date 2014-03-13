@@ -1,6 +1,9 @@
 var
+  path = require('path'),
   child_process = require('child_process'),
-  bin = './bin/torrentfish'
+  istanbul = path.join(__dirname, "..", "..", "node_modules", ".bin", "istanbul"),
+  bin = './bin/torrentfish',
+  tests_run = 0
 
 function array_from(obj) {
   return Object.keys(obj).reduce(function (array, key) {
@@ -12,23 +15,32 @@ function strip_colouring(txt) {
   return txt.replace(/\u001b\[(\d\d;)?\d\d?m/gi, '')
 }
 
-function spawn(opts, callback, kill_on) {
+function test_cov_prefix_args(bin) {
+  return ('cover -x **/tasks/** --report lcovonly --print none ' +
+         '--dir coverage/system/' + tests_run +
+         ' ' + bin + ' --').split(' ')
+}
+
+function spawn(opts, callback) {
+  // Note: see bin/torrentfish for code that uses this
+  process.env.TEST_KILL_AFTER = 3 * 1000
+
   var
-    proc = child_process.spawn(bin, array_from(opts)),
-    err = '', out = '', int_id
+    err = '', out = '', int_id,
+    proc = child_process.spawn(process.env.TEST_COV ? istanbul : bin,
+                               (process.env.TEST_COV ? test_cov_prefix_args(bin) : [])
+                                 .concat(array_from(opts)),
+                                 {env: process.env})
 
   proc.stdout.on('data', function (d) { out += d })
   proc.stderr.on('data', function (d) { err += d })
 
   proc.on('close', function (code) {
-    clearInterval(int_id)
     if (err) console.log(err)
+    tests_run++
+    clearInterval(int_id)
     callback(code, strip_colouring(out), err)
   })
-
-  process.on('exit', function () { proc.kill() })
-  int_id = setInterval(function () { proc.kill() },
-                       1000 * (kill_on || 3))
 
   return proc
 }

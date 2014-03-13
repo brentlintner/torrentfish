@@ -27,7 +27,8 @@
     "optimist": "~0.6.0",
     "minilog": "~2.0.3",
     "nodemailer": "~0.6.0",
-    "dirty": "~0.9.9"
+    "dirty": "~0.9.9",
+    "async": "~0.2.10"
   },
   "devDependencies": {
     "jshint": "~2.4.4",
@@ -39,6 +40,7 @@
     "sinon-chai": "~2.5.0",
     "colors": "~0.6.2",
     "express": "~3.4.8",
-    "shelljs": "~0.2.6"
+    "shelljs": "~0.2.6",
+    "jake": "~0.7.9"
   }
 }

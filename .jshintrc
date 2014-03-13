@@ -24,7 +24,7 @@
   "globals": {
       "require": false,
       "expect": true,
-      "jake": false,
+      "jake": true,
       "define": false,
       "describe": false,
       "xdescribe": false,

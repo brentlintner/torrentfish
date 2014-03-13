@@ -1,2 +1,7 @@
 #!/usr/bin/env node
+if (process.env.TEST_KILL_AFTER) {
+  setInterval(function () {
+    process.exit(0)
+  }, process.env.TEST_KILL_AFTER)
+}
 require('./../lib/cli').interpret()

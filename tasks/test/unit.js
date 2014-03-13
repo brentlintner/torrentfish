@@ -11,7 +11,7 @@ module.exports = function (reporter, callback) {
 
   var runner = new Mocha({
     ui: "bdd",
-    reporter: reporter || 'spec'
+    reporter: reporter || 'dot'
   })
 
   runner.files = utils.collect(unit_tests)
