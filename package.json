@@ -8,11 +8,9 @@
     "email": "brent.lintner@gmail.com"
   },
   "private": true,
-  "licenses": [
-    {
-      "type": "MIT"
-    }
-  ],
+  "licenses": [{
+    "type": "MIT"
+  }],
   "repository": {
     "type": "git",
     "url": "git@github.com:brentlintner/torrentfish.git"
