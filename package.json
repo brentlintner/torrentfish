@@ -1,13 +1,12 @@
 {
   "name": "torrentfish",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A [torrent] feed parsing and notification daemon.",
   "homepage": "",
   "author": {
     "name": "Brent Lintner",
     "email": "brent.lintner@gmail.com"
   },
-  "private": true,
   "licenses": [{
     "type": "MIT"
   }],

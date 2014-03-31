@@ -15,7 +15,7 @@
   "maxdepth": 4,
   "latedef": true,
   "undef":  true,
-  "unused": true,
+  "unused": "vars",
   "newcap": true,
   "immed": true,
   "indent": 2,

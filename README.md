@@ -10,8 +10,8 @@ Note: This is more of a personal project- use at your own risk.
 
 ## Installation
 
-    git clone git@github.com:brentlintner/torrentfish.git
-    npm install -g torrentfish/
+    npm install -g torrentfish
+    torrentfish help
 
 ## Usage Example(s)
 
