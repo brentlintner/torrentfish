@@ -1,17 +1,24 @@
+var mimus = require('mimus')
+
+require('./../fixtures/sinon_chai')
+require('./../fixtures/expect')
+
 describe('logger', function () {
   var
-    minilog = require('minilog'),
-    fs = require('fs'),
-    logger = require('./../../lib/logger'),
-    expect = require('./../fixtures/expect'),
-    sinon_chai = require('./../fixtures/sinon_chai'), _
-
-  sinon_chai(function (sandbox) { _ = sandbox })
+    logger = mimus.require('../../lib/logger', __dirname, [
+      'minilog'
+    ]),
+    fs_createWriteStream = mimus.stub(),
+    minilog
 
   beforeEach(function () {
-    _.stub(minilog, 'pipe').returns(minilog)
-    _.stub(fs, 'createWriteStream')
+    minilog = mimus.get(logger, 'minilog')
+    mimus.set(logger, 'fs', {createWriteStream: fs_createWriteStream})
+    // TODO recursive support
+    minilog.pipe.returns(minilog)
   })
+
+  afterEach(mimus.reset)
 
   describe('setup', function () {
     it('pipes to colour formatted console by default', function () {
@@ -21,7 +28,7 @@ describe('logger', function () {
     })
 
     it('pipes to LOGFILE if specified', function () {
-      fs.createWriteStream.returns('Stream')
+      fs_createWriteStream.returns('Stream')
       process.env.LOGFILE = 'logfile.log'
 
       logger.setup()
@@ -35,7 +42,7 @@ describe('logger', function () {
   describe('create', function () {
     it('returns a generated minilog api with a prefix', function () {
       var prefix = 'foo'
-      _.stub(minilog, 'call')
+      mimus.stub(minilog, 'call')
       logger.create(prefix)
       minilog.call.should.have.been.calledWith(minilog, prefix)
     })

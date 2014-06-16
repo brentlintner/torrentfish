@@ -1,22 +1,30 @@
+var
+  path = require('path'),
+  fs = require('fs'),
+  mimus = require('mimus')
+
+require('./../../fixtures/sinon_chai')
+require('./../../fixtures/expect')
+
 describe('cli cmd:help', function () {
   var
-    path = require('path'),
-    fs = require('fs'),
-    help = require('./../../../lib/cli/help'),
-    logger = require('./../../../lib/logger'),
-    sinon_chai = require('./../../fixtures/sinon_chai'), _
+    help = mimus.require('../../../lib/cli/help', __dirname, [
+      './../logger'
+    ]),
+    logger = mimus.get(help, 'logger'),
+    log = { error: mimus.stub() },
+    cli_doc_folder = path.join(__dirname, '..', '..', '..', 'doc', 'lib', 'cli')
 
-  sinon_chai(function (sinon) { _ = sinon })
+  before(function () {
+    mimus.stub(logger, 'create')
+    mimus.stub(fs, 'readFile')
+  })
+
+  afterEach(mimus.reset)
 
   describe('default cmd', function () {
-    var
-      log,
-      cli_doc_folder = path.join(__dirname, '..', '..', '..', 'doc', 'lib', 'cli')
-
     beforeEach(function () {
-      log = {error: _.stub()}
-      _.stub(logger, 'create').returns(log)
-      _.stub(fs, 'readFile')
+      logger.create.returns(log)
     })
 
     it('creates a cli logger instance', function () {
@@ -44,7 +52,7 @@ describe('cli cmd:help', function () {
       describe('reading the file', function () {
         it('logs any errors', function () {
           var err = 'object'
-          _.stub(console, 'log')
+          mimus.stub(console, 'log')
           help.default()
           fs.readFile.args[0][2](err)
 
@@ -55,7 +63,7 @@ describe('cli cmd:help', function () {
 
         it('logs the data (if no errors)', function () {
           var data = 'string'
-          _.stub(console, 'log')
+          mimus.stub(console, 'log')
           help.default()
           fs.readFile.args[0][2](null, data)
 

@@ -1,11 +1,16 @@
+var mimus = require('mimus')
+
+require('./../fixtures/sinon_chai')
+require('./../fixtures/expect')
+
 describe('config', function () {
   var
-    conf = require('./../../lib/config'),
-    expect = require('./../fixtures/expect'),
-
+    conf = mimus.require('../../lib/config', __dirname),
     default_db_name = 'feeds.db',
     default_interval = 0.5, // hours
     torrentfish_config_file = '.torrentfish.js'
+
+  afterEach(mimus.reset)
 
   describe('default DB name', function () {
     it('is ' + default_db_name, function () {

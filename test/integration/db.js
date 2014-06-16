@@ -1,20 +1,33 @@
+var
+  shell = require('shelljs'),
+  path = require('path'),
+  mimus = require('mimus')
+
+require('./../fixtures/sinon_chai')
+require('./../fixtures/expect')
+
 describe('db integration', function () {
   var
-    shell = require('shelljs'),
-    path = require('path'),
-    db = require('./../../lib/db'),
-    logger = require('./../../lib/logger'),
-    sinon_chai = require('./../fixtures/sinon_chai'), _,
+    db = mimus.require('./../../lib/db', __dirname, [
+      './logger'
+    ]),
+    logger = mimus.get(db, 'logger'),
     db_int_db = path.join(__dirname, '..', '..', 'db_integration_test.db')
 
-  sinon_chai(function (sandbox) { _ = sandbox })
+  before(function () {
+    mimus.stub(logger, 'create')
+  })
 
   beforeEach(function () {
-    _.stub(logger, 'create')
-      .returns({info: _.stub(), error: _.stub()})
+    logger.create.returns({
+      info: mimus.stub(),
+      error: mimus.stub()
+    })
   })
 
   afterEach(function () {
+    mimus.reset()
+
     if (shell.test('-e', db_int_db)) {
       shell.rm(db_int_db)
     }

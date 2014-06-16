@@ -1,38 +1,40 @@
+var mimus = require('mimus')
+
+require('./../fixtures/sinon_chai')
+require('./../fixtures/expect')
+
 describe('db', function () {
   var
-    dirty = require('dirty'),
-    db = require('./../../lib/db'),
-    logger = require('./../../lib/logger'),
-    sinon_chai = require('./../fixtures/sinon_chai'), _,
+    db = mimus.require('./../../lib/db', __dirname, [
+      './../../lib/logger',
+      'minilog',
+      'dirty'
+    ]),
+    dirty = mimus.get(db, 'dirty'),
+    logger = mimus.get(db, 'logger'),
+    db_loaded, db_instance, log_instance
 
-    db_loaded,
-    db_instance,
-    log_instance
-
-  sinon_chai(function (sandbox) { _ = sandbox })
-
-  beforeEach(function () {
-    db_loaded = _.stub()
+  before(function () {
+    db_loaded = mimus.stub()
     db_instance = {
-      set: _.stub(),
-      get: _.stub(),
-      on: _.stub()
+      set: mimus.stub(),
+      get: mimus.stub(),
+      on: mimus.stub()
     }
 
-    log_instance = {
-      info: _.stub()
-    }
-
-    _.stub(logger, 'create').returns(log_instance)
-    _.stub(dirty, 'call').returns(db_instance)
+    log_instance = { info: mimus.stub() }
+    dirty.returns(db_instance)
+    logger.create.returns(log_instance)
   })
+
+  afterEach(mimus.reset)
 
   // since this is a passthrough to 'dirty' module, test abstraction layer only
   // anything else should be in integration/system
   describe('opening', function () {
     it('creates a dirty db with a given name', function () {
       db.open('foo', db_loaded)
-      dirty.call.should.have.been.calledWith(dirty, 'foo')
+      dirty.should.have.been.calledWith('foo')
     })
 
     it('auto binds and calls back on db:load event', function () {

@@ -1,27 +1,40 @@
+var mimus = require('mimus')
+
+require('./../../fixtures/sinon_chai')
+require('./../../fixtures/expect')
+
 describe('daemon.poll', function () {
   var
-    parser = require('./../../../lib/parser'),
-    logger = require('./../../../lib/logger'),
-    poll = require('./../../../lib/daemon/poll'),
-    digest = require('./../../../lib/daemon/digest'),
-    sinon_chai = require('./../../fixtures/sinon_chai'), _
+    poll = mimus.require('./../../../lib/daemon/poll', __dirname, [
+      './digest',
+      './../logger',
+      './../parser'
+    ]),
+    parser = mimus.get(poll, 'parser'),
+    logger = mimus.get(poll, 'logger'),
+    digest = mimus.get(poll, 'digest'),
+    log = { info: mimus.stub(), error: mimus.stub() },
+    feeds_db = {
+      forEach: mimus.stub(),
+      get: mimus.stub(),
+      set: mimus.stub()
+    },
+    url,
+    setInterval
 
-  sinon_chai(function (sandbox) { _ = sandbox })
+  before(function () {
+    setInterval = mimus.stub()
+    mimus.set(poll, 'interval', setInterval)
+  })
+
+  beforeEach(function () {
+    url = 'http://'
+    logger.create.withArgs('poll').returns(log)
+  })
+
+  afterEach(mimus.reset)
 
   describe('polling a feed', function () {
-    var url, feeds_db, log
-
-    beforeEach(function () {
-      log = {info: _.stub()}
-      url = 'http://'
-      feeds_db = {forEach: _.stub(), get: _.stub(), set: _.stub()}
-
-      _.stub(parser, 'scrape')
-      _.stub(digest, 'send')
-      _.stub(logger, 'create').withArgs('poll').returns(log)
-      _.stub(global, 'setInterval')
-    })
-
     it('sets a feed check interval', function () {
       poll.feed(url, feeds_db, {interval: 1})
       expect(setInterval.args[0][1]).to.eql(1 * 60 * 60 * 1000)
@@ -66,7 +79,7 @@ describe('daemon.poll', function () {
       var item
 
       beforeEach(function () {
-        item = {title: 'some title', link: 'http://'}
+        item = { title: 'some title', link: 'http://' }
         parser.scrape.withArgs(url).callsArgWith(1, null, item)
       })
 
@@ -74,11 +87,14 @@ describe('daemon.poll', function () {
         it('is added to the db if it matches any watchlist items', function (done) {
           var watchlist = {"something": [/some\stitle/i, /title/i]}
 
-          poll.feed(url, feeds_db, {watchlist: watchlist})
+          poll.feed(url, feeds_db, { watchlist: watchlist })
 
           process.nextTick(function () {
             feeds_db.set.should.have.been
-              .calledWith(item.title, {link: item.link, notified: false})
+              .calledWith(item.title, {
+                link: item.link,
+                notified: false
+              })
             done()
           })
         })
@@ -88,11 +104,14 @@ describe('daemon.poll', function () {
 
           feeds_db.get.withArgs(item.title).returns({})
 
-          poll.feed(url, feeds_db, {watchlist: watchlist})
+          poll.feed(url, feeds_db, { watchlist: watchlist })
 
           process.nextTick(function () {
             feeds_db.set.should.not.have.been
-              .calledWith(item.title, {link: item.link, notified: false})
+              .calledWith(item.title, {
+                link: item.link,
+                notified: false
+              })
             done()
           })
         })

@@ -1,41 +1,56 @@
+var mimus = require('mimus')
+
+require('./../fixtures/sinon_chai')
+require('./../fixtures/expect')
+
 describe('parser', function () {
   var
-    FeedParser = require('feedparser'),
-    zlib = require('zlib'),
-    request = require('request'),
-    logger = require('./../../lib/logger'),
-    parser = require('./../../lib/parser'),
-    sinon_chai = require('./../fixtures/sinon_chai'), _
+    parser = mimus.require('../../lib/parser', __dirname, [
+      './logger',
+      'minilog',
+      'FeedParser',
+      'zlib',
+      'request'
+    ]),
+    logger,
+    zlib,
+    FeedParser,
+    request,
+    url = 'http://foo.com/bar.rss',
+    log, req, res, callback
 
-  sinon_chai(function (sandbox) { _ = sandbox })
+  beforeEach(function () {
+    callback = mimus.stub()
+
+    log = {error: mimus.stub()}
+    res = {headers: {}, on: mimus.stub(), pipe: mimus.stub()}
+    req = {on: mimus.stub()}
+
+    res.pipe.returns(res)
+    res.on.returns(res)
+    req.on
+    .returns(req)
+    .withArgs('response')
+    .callsArgWith(1, res)
+
+    FeedParser = { call: mimus.stub() }
+    request = mimus.stub().returns(req)
+    logger = mimus.get(parser, 'logger')
+    zlib = mimus.get(parser, 'zlib')
+    logger.create.returns(log)
+
+    mimus.set(parser, 'FeedParser', FeedParser)
+    mimus.set(parser, 'request', request)
+  })
+
+  afterEach(function () {
+    mimus.reset()
+  })
 
   describe('scrape', function () {
-    var
-      url = 'http://foo.com/bar.rss',
-      log, req, res, callback
-
-    beforeEach(function () {
-      callback = _.stub()
-      log = {error: _.stub()}
-      res = {headers: {}, on: _.stub(), pipe: _.stub()}
-      req = {on: _.stub()}
-
-      res.pipe.returns(res)
-      res.on.returns(res)
-      req.on
-        .returns(req)
-        .withArgs('response')
-        .callsArgWith(1, res)
-
-      _.stub(logger, 'create').returns(log)
-      _.stub(request, 'call').returns(req)
-      _.stub(FeedParser, 'call')
-      _.stub(zlib, 'createUnzip')
-    })
-
     it('requests the feed url', function () {
       parser.scrape(url, callback)
-      request.call.should.have.been.calledWith(request, url)
+      request.should.have.been.calledWith(url)
     })
 
     describe('unzipping encoded response', function () {
@@ -76,14 +91,14 @@ describe('parser', function () {
     it('reads in a complete stream and calls back for each item', function () {
       var
         read = 0,
-        item = _.stub(),
+        item = mimus.stub(),
         stream = {read: function () { // simulate 2 items
           return(read++, read <= 2 ? item : undefined)
         }}
 
       parser.scrape(url, callback)
 
-      _.stub(process, 'nextTick').callsArg(0)
+      mimus.stub(process, 'nextTick').callsArg(0)
 
       // TODO: use advanced sinon stuff vs invoking callback
       res.on.should.have.been.calledWith('readable')

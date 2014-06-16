@@ -1,49 +1,59 @@
+var
+  path = require('path'),
+  mimus = require('mimus')
+
+require('./../fixtures/sinon_chai')
+require('./../fixtures/expect')
+
 describe('daemon', function () {
   var
-    path = require('path'),
-    fs = require('fs'),
-    daemon = require('./../../lib/daemon'),
-    poll = require('./../../lib/daemon/poll'),
-    logger = require('./../../lib/logger'),
-    db = require('./../../lib/db'),
-    conf = require('./../../lib/config'),
-    sinon_chai = require('./../fixtures/sinon_chai'), _
+    daemon = mimus.require('./../../lib/daemon', __dirname, [
+      './daemon/poll',
+      './logger',
+      './db'
+    ]),
+    poll = mimus.get(daemon, 'poll'),
+    logger = mimus.get(daemon, 'logger'),
+    db = mimus.get(daemon, 'db'),
+    conf = mimus.get(daemon, '$'),
+    fs = mimus.get(daemon, 'fs'),
 
-  sinon_chai(function (sandbox) { _ = sandbox })
+    default_email_interval = parseInt(conf.default_interval * 3, 10),
+    default_torrentfish_config = path.join(process.cwd(), conf.torrentfish_config_file),
+    log = { error: mimus.stub() },
+    db_instance = { set: mimus.stub(), get: mimus.stub() },
+
+    minimal_opts
+
+  before(function () {
+    mimus.stub(fs, 'readFileSync')
+    mimus.stub(fs, 'existsSync')
+  })
+
+  after(function () {
+    fs.readFileSync.restore()
+    fs.existsSync.restore()
+  })
+
+  afterEach(mimus.reset)
 
   describe('monitor', function () {
-    var
-      db_instance, log, minimal_opts, user_conf,
-      default_email_interval = parseInt(conf.default_interval * 3, 10),
-      default_torrentfish_config = path.join(process.cwd(), conf.torrentfish_config_file)
-
-
-    beforeEach(function () {
-      db_instance = {set: _.stub(), get: _.stub()}
-      log = {error: _.stub()}
-      minimal_opts = {
-        url: 'http://foo.com/bar.rss'
-      }
-
-      // fake default .torrentfish file in CWD
-      _.stub(JSON, 'parse').returnsArg(0)
-      _.stub(fs, 'existsSync')
-        .withArgs(default_torrentfish_config)
-        .returns(true)
-      _.stub(fs, 'readFileSync')
-        .returns("{}")
-
-      _.stub(logger, 'create').withArgs('daemon').returns(log)
-      _.stub(db, 'open').callsArgWith(1, db_instance)
-      _.stub(poll, 'feed')
-    })
-
     beforeEach(function () {
       delete conf.user
+      minimal_opts = { url: 'http://foo.com/bar.rss' }
+
+      // fake default .torrentfish file in CWD
+      fs.readFileSync.returns("{default: {}}")
+      fs.existsSync
+        .withArgs(default_torrentfish_config)
+        .returns(true)
+
+      db.open.callsArgWith(1, db_instance)
+      logger.create.withArgs('daemon').returns(log)
     })
 
     it('handles undefined opts', function () {
-      _.stub(process, 'exit')
+      mimus.stub(process, 'exit')
       daemon.monitor()
       process.exit.should.have.been.calledWith(1)
       process.exit.restore()
@@ -110,7 +120,7 @@ describe('daemon', function () {
 
       describe('if no url is provided', function () {
         it('logs error and exits process', function () {
-          _.stub(process, 'exit')
+          mimus.stub(process, 'exit')
           delete minimal_opts.url
 
           daemon.monitor(minimal_opts)
@@ -124,19 +134,21 @@ describe('daemon', function () {
 
     describe('specifying a user conf (with a watchlist)', function () {
       it('via opts.watchlist', function () {
-        var fake_watchlist = {}
+        var
+          fake_watchlist = { foo: 'bar' },
+          user_conf = { watchlist: fake_watchlist }
 
         minimal_opts.watchlist = 'fakedir/.torrentfish.js'
 
+        fs.existsSync.reset()
         fs.existsSync
           .withArgs(path.join(process.cwd(), minimal_opts.watchlist))
           .returns(true)
 
+        fs.readFileSync.reset()
         fs.readFileSync
           .withArgs(path.join(process.cwd(), minimal_opts.watchlist))
-          .returns(JSON.stringify(user_conf = {
-            watchlist: fake_watchlist
-          }))
+          .returns(JSON.stringify(user_conf))
 
         daemon.monitor(minimal_opts)
 
@@ -150,8 +162,8 @@ describe('daemon', function () {
 
       describe('if no watchlist is found', function () {
         it('logs error and exits process', function () {
-          _.stub(process, 'exit')
-          _.stub(process, 'cwd').returns('/nowhere')
+          mimus.stub(process, 'exit')
+          mimus.stub(process, 'cwd').returns('/nowhere')
           delete minimal_opts.watchlist
 
           daemon.monitor(minimal_opts)

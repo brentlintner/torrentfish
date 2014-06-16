@@ -1,39 +1,35 @@
+var
+  mimus = require('mimus'),
+  optimist = require('optimist')
+
+require('./../fixtures/sinon_chai')
+require('./../fixtures/expect')
+
 describe('cli', function () {
   var
-    optimist = require('optimist'),
-    logger = require('./../../lib/logger'),
-    cli = require('./../../lib/cli'),
-    cli_help = require('./../../lib/cli/help'), // will always be here
+    cli = mimus.require('../../lib/cli', __dirname, [
+      './cli/help'
+    ]),
+    cli_help = mimus.get(cli, 'help'),
     cli_daemon = require('./../../lib/cli/daemon'),
-    sinon_chai = require('./../fixtures/sinon_chai'), _
+    argv,
+    original_argv
 
-  sinon_chai(function (sinon) { _ = sinon })
+    before(function () {
+      mimus.stub(cli_daemon, 'default')
+      mimus.stub(cli_daemon, 'monitor')
+    })
 
   describe('interpret', function () {
-    var
-      argv,
-      original_argv,
-      log
-
     beforeEach(function () {
       original_argv = optimist.argv
       argv = {}
       optimist.argv = argv
-
-      _.stub(logger, 'create')
-        .returns(log = {
-          info: _.stub(),
-          error: _.stub()
-        })
-
-      _.stub(cli_help, 'default')
-      _.stub(cli_help, 'help')
-      _.stub(cli_daemon, 'default')
-      _.stub(cli_daemon, 'monitor')
     })
 
     afterEach(function () {
       optimist.argv = original_argv
+      mimus.reset()
     })
 
     describe('with no commands', function () {

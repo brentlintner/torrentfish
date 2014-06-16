@@ -3,10 +3,11 @@ var
   shell = require('shelljs'),
   path = require('path'),
   fs = require('fs'),
-  expect = require('./../fixtures/expect'),
   config = require('./../../lib/config'),
   cli = require('./../fixtures/cli'),
   logged = require('./../fixtures/logging_matcher')
+
+require('./../fixtures/expect')
 
 // TODO: torrentfish file stuff (cwd pickup)
 // TODO: test with LOGFILE= support

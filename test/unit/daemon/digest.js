@@ -1,16 +1,24 @@
+var mimus = require('mimus')
+
+require('./../../fixtures/sinon_chai')
+require('./../../fixtures/expect')
+
 describe('daemon digest', function () {
   var
-    mailer = require('./../../../lib/mailer'),
-    logger = require('./../../../lib/logger'),
-    conf = require('./../../../lib/config'),
-    digest = require('./../../../lib/daemon/digest'),
-    sinon_chai = require('./../../fixtures/sinon_chai'), _
+    digest = mimus.require('./../../../lib/daemon/digest', __dirname, [
+      './../logger',
+      './../mailer'
+    ]),
+    mailer = mimus.get(digest, 'mailer'),
+    logger = mimus.get(digest, 'logger'),
+    conf = mimus.get(digest, 'conf'),
+    log = { error: mimus.stub(), info: mimus.stub() }
 
-  sinon_chai(function (sandbox) { _ = sandbox })
+  afterEach(mimus.reset)
 
   describe('sending an email of unnotified items', function () {
     var
-      log, feeds_db,
+      feeds_db,
       notified_key, unnotified_key2, unnotified_key,
       notified_item, unnotified_item2, unnotified_item
 
@@ -22,16 +30,12 @@ describe('daemon digest', function () {
       unnotified_item = {notified: false, link: 'http://anotherlink', title: unnotified_key},
       unnotified_item2 = {notified: false, link: 'http://lastlink', title: unnotified_key2}
 
-      log = {error: _.stub(), info: _.stub()}
-
       // mimic user conf
-      conf.user = {
-        mailer: {auth: {}, digest: {}}
-      }
+      conf.user = { mailer: {auth: {}, digest: {}} }
 
       feeds_db = {
-        set: _.stub(),
-        get: _.stub(),
+        set: mimus.stub(),
+        get: mimus.stub(),
         forEach: function (cb) {
           cb(notified_key, notified_item)
           cb(unnotified_key, unnotified_item)
@@ -39,15 +43,10 @@ describe('daemon digest', function () {
         }
       }
 
-      _.stub(mailer, 'send')
-      _.stub(logger, 'create')
-        .withArgs('digest')
-        .returns(log)
+      logger.create.withArgs('digest').returns(log)
     })
 
-    afterEach(function () {
-      delete conf.user
-    })
+    afterEach(function () { delete conf.user })
 
     it('collects any unnotified items from the db', function () {
       digest.send(feeds_db)
@@ -65,16 +64,11 @@ describe('daemon digest', function () {
     })
 
     it('passes in mailer auth (via config)', function () {
-      conf.user.mailer.auth = {
-        user: 'foo',
-        pass: 'bar',
-      }
-
+      conf.user.mailer.auth = { user: 'foo', pass: 'bar' }
       digest.send(feeds_db)
-
       expect(mailer.send.args[0][0].auth).to.eql(conf.user.mailer.auth)
     })
-    
+
     it('passes in from, to, and subject (via config)', function () {
       conf.user.mailer.auth = {user: 'foo'}
       conf.user.mailer.digest.subject = 'digest email'
@@ -119,8 +113,8 @@ describe('daemon digest', function () {
       var err, res
 
       beforeEach(function () {
-        err = {foo: 'bar'},
-        res = {message: 'msg'}
+        err = { foo: 'bar' },
+        res = { message: 'msg' }
       })
 
       it('saves each sent item as notified', function () {
@@ -130,11 +124,11 @@ describe('daemon digest', function () {
 
         feeds_db.set.should.have.been.calledTwice
         feeds_db.set.should.have.been
-          .calledWith(unnotified_key, {notified: true})
+          .calledWith(unnotified_key, { notified: true })
         feeds_db.set.should.have.been
-          .calledWith(unnotified_key2, {notified: true})
+          .calledWith(unnotified_key2, { notified: true })
       })
-      
+
       describe('if there is an error', function () {
         it('logs error', function () {
           mailer.send.callsArgWith(1, err, res)

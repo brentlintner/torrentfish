@@ -1,20 +1,23 @@
+var mimus = require('mimus')
+
+require('./../fixtures/sinon_chai')
+require('./../fixtures/expect')
+
 describe('mailer', function () {
   var
-    nodemailer = require('nodemailer'),
-    mailer = require('./../../lib/mailer'),
-    sinon_chai = require('./../fixtures/sinon_chai'), _
-
-  sinon_chai(function (sandbox) { _ = sandbox })
+    mailer = mimus.require('../../lib/mailer', __dirname, [
+      'nodemailer'
+    ]),
+    nodemailer,
+    callback,
+    smtp_conn
 
   describe('send', function () {
-    var
-      callback,
-      smtp_conn
-
     beforeEach(function () {
-      callback = _.stub()
-      smtp_conn = {close: _.stub(), sendMail: _.stub()}
-      _.stub(nodemailer, 'createTransport').returns(smtp_conn)
+      callback = mimus.stub()
+      smtp_conn = {close: mimus.stub(), sendMail: mimus.stub()}
+      nodemailer = mimus.get(mailer, 'mailer')
+      nodemailer.createTransport.returns(smtp_conn)
     })
 
     it('creates an SMTP transporter', function () {

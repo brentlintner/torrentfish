@@ -1,13 +1,16 @@
+var mimus = require('mimus')
+
+require('./../../fixtures/sinon_chai')
+require('./../../fixtures/expect')
+
 describe('cli cmd:daemon', function () {
-  var
-    cli_daemon = require('./../../../lib/cli/daemon'),
-    daemon = require('./../../../lib/daemon'),
-    sinon_chai = require('./../../fixtures/sinon_chai'), _
+  var cli_daemon = mimus.require('../../../lib/cli/daemon', __dirname, [
+      './../daemon'
+    ]),
+    daemon
 
-  sinon_chai(function (sandbox) { _ = sandbox })
-
-  beforeEach(function () {
-    _.stub(daemon, 'monitor')
+  before(function () {
+    daemon = mimus.get(cli_daemon, 'daemon')
   })
 
   describe('cmd:default', function () {
