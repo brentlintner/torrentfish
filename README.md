@@ -1,6 +1,6 @@
 # torrentfish
 
-https://david-dm.org/brentlintner/torrentfish.png
+![](https://david-dm.org/brentlintner/torrentfish.png)
 
 A feed parsing and notification daemon.
 
