@@ -1,5 +1,7 @@
 # torrentfish
 
+https://david-dm.org/brentlintner/torrentfish.png
+
 A feed parsing and notification daemon.
 
 Note: This is more of a personal project- use at your own risk.
