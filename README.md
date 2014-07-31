@@ -31,7 +31,3 @@ For example files, see [doc/examples](https://github.com/brentlintner/torrentfis
 ## Supported Feeds
 
 * http://torrentday.com
-
-## Build Status
-
-[ ![Codeship Status for brentlintner/torrentfish](https://www.codeship.io/projects/e20bfd80-fabf-0131-3ef6-66b21a9f2fb0/status)](https://www.codeship.io/projects/29085)
