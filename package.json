@@ -18,6 +18,9 @@
   "bin": {
     "torrentfish": "bin/torrentfish"
   },
+  "scripts": {
+    "test": "jake test"
+  },
   "dependencies": {
     "feedparser": "~0.16.5",
     "request": "2.34.0",
