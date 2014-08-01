@@ -32,3 +32,11 @@ For example files, see [doc/examples](https://github.com/brentlintner/torrentfis
 ## Supported Feeds
 
 * http://torrentday.com
+
+## Testing
+
+    npm test
+
+With test coverage.
+
+    npm run test-cov

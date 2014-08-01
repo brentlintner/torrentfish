@@ -69,6 +69,20 @@ function serve_results(callback) {
   callback()
 }
 
+function send_to_coveralls(callback) {
+  var cmd = "cat ./coverage/lcov.info | " +
+            "./node_modules/.bin/coveralls"
+
+  console.log("Sending lcov data to coveralls.io".green)
+
+  child_process.exec(cmd, function (err, stdout, stderr) {
+    console.log(stdout)
+    console.log(stderr)
+    if (err) throw err
+    callback()
+  })
+}
+
 function test_with_cov(type) {
   var cmds = [cleanup]
 
@@ -79,7 +93,10 @@ function test_with_cov(type) {
 
   cmds = cmds.concat([
     merge_reports,
-    serve_results
+
+    process.env.CI_BUILD ?
+      send_to_coveralls :
+      serve_results
   ])
 
   async.series(cmds)

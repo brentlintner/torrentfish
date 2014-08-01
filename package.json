@@ -7,9 +7,11 @@
     "name": "Brent Lintner",
     "email": "brent.lintner@gmail.com"
   },
-  "licenses": [{
-    "type": "MIT"
-  }],
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:brentlintner/torrentfish.git"
@@ -19,16 +21,19 @@
     "torrentfish": "bin/torrentfish"
   },
   "scripts": {
-    "test": "jake test"
+    "test": "jake test",
+    "test-cov": "jake test:cov",
+    "test-cov-ci": "CI_BUILD=1 jake test:cov"
   },
   "dependencies": {
+    "async": "~0.2.10",
+    "coveralls": "^2.11.1",
+    "dirty": "~0.9.9",
     "feedparser": "~0.16.5",
-    "request": "2.34.0",
-    "optimist": "~0.6.0",
     "minilog": "~2.0.3",
     "nodemailer": "~0.6.0",
-    "dirty": "~0.9.9",
-    "async": "~0.2.10"
+    "optimist": "~0.6.0",
+    "request": "2.34.0"
   },
   "devDependencies": {
     "jshint": "~2.4.4",
