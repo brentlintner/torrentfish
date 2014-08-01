@@ -26,26 +26,26 @@
     "test-cov-ci": "CI_BUILD=1 jake test:cov"
   },
   "dependencies": {
-    "async": "~0.2.10",
+    "async": "0.9.0",
     "coveralls": "^2.11.1",
     "dirty": "~0.9.9",
-    "feedparser": "~0.16.5",
+    "feedparser": "0.19.1",
     "minilog": "~2.0.3",
-    "nodemailer": "~0.6.0",
+    "nodemailer": "1.1.1",
     "optimist": "~0.6.0",
-    "request": "2.34.0"
+    "request": "2.39.0"
   },
   "devDependencies": {
-    "jshint": "~2.4.4",
+    "jshint": "2.5.2",
     "chai": "~1.9.0",
-    "mocha": "~1.17.1",
+    "mocha": "1.21.3",
     "police": "~0.3.2",
-    "istanbul": "~0.2.4",
-    "sinon": "1.9.0",
+    "istanbul": "0.3.0",
+    "sinon": "1.10.3",
     "sinon-chai": "~2.5.0",
     "colors": "~0.6.2",
-    "express": "~3.4.8",
-    "shelljs": "~0.2.6",
-    "jake": "~0.7.9"
+    "express": "4.7.2",
+    "shelljs": "0.3.0",
+    "jake": "8.0.1"
   }
 }
