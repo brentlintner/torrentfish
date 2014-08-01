@@ -54,7 +54,7 @@ describe('daemon.poll', function () {
     })
 
     it('does nothing when there is an error (and no exception happen)', function (done) {
-      var err = Error('foo')
+      var err = new Error('foo')
       parser.scrape.withArgs(url).callsArgWith(1, err, null)
       poll.feed(url, feeds_db)
       process.nextTick(function () {
