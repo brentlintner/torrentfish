@@ -44,3 +44,7 @@ For example files, see [doc/examples](https://github.com/brentlintner/torrentfis
 With test coverage.
 
     npm run test-cov
+
+## Versioning
+
+This project ascribes to [semantic versioning](http://semver.org).
