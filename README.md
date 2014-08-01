@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/brentlintner/torrentfish.svg?branch=master)](https://travis-ci.org/brentlintner/torrentfish)
 
+[![Coverage Status](https://coveralls.io/repos/brentlintner/torrentfish/badge.png?branch=master)](https://coveralls.io/r/brentlintner/torrentfish?branch=master)
+
 [![Dependency Status](https://david-dm.org/brentlintner/torrentfish.svg)](https://david-dm.org/brentlintner/torrentfish)
 
 A feed parsing and notification daemon.
