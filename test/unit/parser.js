@@ -91,13 +91,12 @@ describe('parser', function () {
       process.nextTick.restore()
 
       callback.should.have.been.calledTwice
-      callback.should.always.have.been.calledWith(item)
+      callback.should.always.have.been.calledWith(null, item)
     })
 
-    it('logs and exits process on any errors', function () {
+    it('logs the error, and calls back with it', function () {
       var err = {foo: 'bar'}
 
-      _.stub(process, 'exit')
       res.on.withArgs('error')
             .callsArgWith(1, err)
             .returns(res)
@@ -105,9 +104,6 @@ describe('parser', function () {
       parser.scrape(url, callback)
 
       log.error.should.have.been.calledWith(err)
-      process.exit.should.have.been.calledWith(1)
-
-      process.exit.restore()
     })
   })
 })

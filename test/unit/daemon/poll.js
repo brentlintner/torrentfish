@@ -38,7 +38,7 @@ describe('daemon.poll', function () {
       poll.feed(url, feeds_db, {email_interval: 1})
       expect(setInterval.args[1][1]).to.eql(1 * 60 * 60 * 1000)
     })
-    
+
     it('sends a digest on set email interval', function () {
       setInterval.onCall(1).callsArg(0)
       poll.feed(url, feeds_db, {email_interval: 1})
@@ -53,12 +53,21 @@ describe('daemon.poll', function () {
       })
     })
 
+    it('does nothing when there is an error (and no exception happen)', function (done) {
+      var err = Error('foo')
+      parser.scrape.withArgs(url).callsArgWith(1, err, null)
+      poll.feed(url, feeds_db)
+      process.nextTick(function () {
+        done()
+      })
+    })
+
     describe('for each scraped item', function () {
       var item
 
       beforeEach(function () {
         item = {title: 'some title', link: 'http://'}
-        parser.scrape.withArgs(url).callsArgWith(1, item)
+        parser.scrape.withArgs(url).callsArgWith(1, null, item)
       })
 
       describe('that matches a watchlist item', function () {
