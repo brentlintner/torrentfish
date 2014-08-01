@@ -1,6 +1,6 @@
 {
   "name": "torrentfish",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A [torrent] feed parsing and notification daemon.",
   "homepage": "",
   "author": {
