@@ -40,7 +40,7 @@ function run_system(callback) {
   process.env.TEST_COV = true
 
   child_process
-    .spawn(jake, ["test:system[list]"], {
+    .spawn(jake, ["test:system"], {
       stdio: "inherit",
       env: process.env
     })

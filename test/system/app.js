@@ -162,7 +162,7 @@ describe('app [cli]', function () {
       opts['--email_interval'] = 0.0003
 
       cli.spawn(opts, function (code, stdout) {
-        expect(stdout).to.match(logged.error('invalid login'))
+        expect(stdout).to.match(logged.error('Error: connect'))
         expect(code).not.to.eql(1)
         done()
       })
