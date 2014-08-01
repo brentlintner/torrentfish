@@ -19,14 +19,20 @@ function run_unit(callback) {
   var args = ("cover -x **/tasks/** --dir coverage/unit jake -- test:unit").split(" ")
   child_process
     .spawn(istanbul, args, {stdio: "inherit"})
-    .on("exit", callback)
+    .on("exit", function (code) {
+      if (code !== 0) process.exit(code)
+      callback(code)
+    })
 }
 
 function run_integration(callback) {
   var args = ("cover -x **/tasks/** --dir coverage/integration jake -- test:integration").split(" ")
   child_process
     .spawn(istanbul, args, {stdio: "inherit"})
-    .on("exit", callback)
+    .on("exit", function (code) {
+      if (code !== 0) process.exit(code)
+      callback(code)
+    })
 }
 
 function run_system(callback) {
@@ -41,6 +47,7 @@ function run_system(callback) {
     .on("exit", function (code) {
       console.log('Note:'.red + ' System test summary not viewable via terminal.')
       console.log()
+      if (code !== 0) process.exit(code)
       callback(code)
     })
 }
