@@ -1,5 +1,7 @@
 # torrentfish
 
+[![NPM version](https://badge.fury.io/js/torrentfish.svg)](http://badge.fury.io/js/torrentfish)
+
 [![Build Status](https://travis-ci.org/brentlintner/torrentfish.svg?branch=master)](https://travis-ci.org/brentlintner/torrentfish)
 
 [![Coverage Status](https://coveralls.io/repos/brentlintner/torrentfish/badge.png?branch=master)](https://coveralls.io/r/brentlintner/torrentfish?branch=master)
