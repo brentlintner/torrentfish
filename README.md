@@ -1,8 +1,8 @@
 # torrentfish
 
-![](https://travis-ci.org/brentlintner/torrentfish.svg?branch=master)
+[![Build Status](https://travis-ci.org/brentlintner/torrentfish.svg?branch=master)](https://travis-ci.org/brentlintner/torrentfish)
 
-![](https://david-dm.org/brentlintner/torrentfish.png)
+[![Dependency Status](https://david-dm.org/brentlintner/torrentfish.svg)](https://david-dm.org/brentlintner/torrentfish)
 
 A feed parsing and notification daemon.
 
