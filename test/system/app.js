@@ -158,7 +158,7 @@ describe('app [cli]', function () {
       })
     })
 
-    it('stays up and running if digest send fails', function (done) {
+    xit('stays up and running if digest send fails', function (done) {
       opts['--interval'] = 0.0001
       opts['--email_interval'] = 0.0003
 
