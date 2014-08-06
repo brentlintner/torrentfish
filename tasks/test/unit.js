@@ -16,11 +16,8 @@ module.exports = function (reporter, callback) {
 
   runner.files = utils.collect(unit_tests)
   runner.run(function (failed) {
-    if (failed !== 0) process.exit(failed)
-
-    callback ?
-      callback() :
-      complete()
+    if (failed !== 0) process.exit(1)
+    callback ? callback() : complete()
   })
 
   jake.addListener('complete', function () {

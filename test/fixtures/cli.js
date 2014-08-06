@@ -21,9 +21,9 @@ function test_cov_prefix_args(bin) {
          ' ' + bin + ' --').split(' ')
 }
 
-function spawn(opts, callback) {
+function spawn(opts, callback, kill_after) {
   // Note: see bin/torrentfish for code that uses this
-  process.env.TEST_KILL_AFTER = 3 * 1000
+  process.env.TEST_KILL_AFTER = kill_after || 2 * 1000
 
   var
     err = '', out = '', int_id,
@@ -36,10 +36,10 @@ function spawn(opts, callback) {
   proc.stderr.on('data', function (d) { err += d })
 
   proc.on('close', function (code) {
-    if (err) console.log(err)
+    if (err) console.log(new Buffer(err).toString('utf-8'))
     tests_run++
     clearInterval(int_id)
-    callback(code, strip_colouring(out), err)
+    callback(code, strip_colouring(new Buffer(out).toString('utf-8')), err)
   })
 
   return proc

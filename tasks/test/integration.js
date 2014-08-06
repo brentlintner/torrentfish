@@ -17,7 +17,10 @@ module.exports = function (reporter, callback) {
   })
 
   runner.files = utils.collect(integration_tests)
-  runner.run(callback || complete)
+  runner.run(function (failed) {
+    if (failed !== 0) process.exit(1)
+    callback ? callback() : complete()
+  })
 
   jake.addListener('complete', function () {
     process.exit()

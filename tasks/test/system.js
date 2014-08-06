@@ -14,11 +14,14 @@ module.exports = function (reporter, callback) {
       ui: "bdd",
       reporter: reporter || 'dot',
       timeout: 10000,
-      slow: 5000
+      slow: 8000
     })
 
   runner.files = utils.collect(system_tests)
-  runner.run(callback || complete)
+  runner.run(function (failed) {
+    if (failed !== 0) process.exit(1)
+    callback ? callback() : complete()
+  })
 
   jake.addListener('complete', function () {
     process.exit()

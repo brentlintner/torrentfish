@@ -85,7 +85,7 @@ describe('app [cli]', function () {
       cli.spawn(opts, function (code, stdout) {
         expect(code).to.eql(1)
         expect(stdout).to.match(logged.error("no feed url provided"))
-        done()
+        setTimeout(done, 200)
       })
     })
 
@@ -93,7 +93,7 @@ describe('app [cli]', function () {
       cli.spawn(opts, function (code, stdout) {
         assert_no_errors(code, stdout)
         expect(stdout).to.match(logged.db_load(system_app_test_db))
-        done()
+        setTimeout(done, 200)
       })
     })
 
@@ -102,7 +102,7 @@ describe('app [cli]', function () {
         assert_no_errors(code, stdout)
         expect(stdout).to.match(logged.added_item('just the tip'))
         expect(stdout).to.match(logged.added_item('super dave'))
-        done()
+        setTimeout(done, 200)
       })
     })
 
@@ -113,7 +113,7 @@ describe('app [cli]', function () {
         assert_no_errors(code, stdout)
         expect(stdout).to.match(logged.added_item(''))
         expect(stdout).to.match(logged.checking_feeds())
-        done()
+        setTimeout(done, 200)
       })
     })
 
@@ -121,7 +121,7 @@ describe('app [cli]', function () {
       cli.spawn(opts, function (code, stdout) {
         assert_no_errors(code, stdout)
         expect(stdout).to.match(logged.db_drain(system_app_test_db))
-        done()
+        setTimeout(done, 200)
       })
     })
 
@@ -131,7 +131,7 @@ describe('app [cli]', function () {
         expect(stdout).to.match(logged.check_interval(config.default_interval))
         expect(stdout).to.match(logged.email_interval(config.default_email_interval))
         expect(config.default_interval < config.default_email_interval).to.eql(true)
-        done()
+        setTimeout(done, 200)
       })
     })
 
@@ -143,7 +143,7 @@ describe('app [cli]', function () {
         assert_no_errors(code, stdout)
         expect(stdout).to.match(logged.check_interval(3))
         expect(stdout).to.match(logged.email_interval(7))
-        done()
+        setTimeout(done, 200)
       })
     })
 
@@ -154,7 +154,7 @@ describe('app [cli]', function () {
         assert_no_errors(code, stdout)
         expect(stdout).to.match(logged.added_item('just the tip'))
         expect(stdout).to.match(logged.added_item('super dave'))
-        done()
+        setTimeout(done, 200)
       })
     })
 
@@ -165,7 +165,7 @@ describe('app [cli]', function () {
       cli.spawn(opts, function (code, stdout) {
         expect(stdout).to.match(logged.error('Error: connect'))
         expect(code).not.to.eql(1)
-        done()
+        setTimeout(done, 200)
       })
     })
   })
