@@ -8,6 +8,8 @@
 
 [![Dependency Status](https://david-dm.org/brentlintner/torrentfish.svg)](https://david-dm.org/brentlintner/torrentfish)
 
+[![bitHound Score](https://www.bithound.io/github/brentlintner/torrentfish/badges/score.svg)](https://www.bithound.io/github/brentlintner/torrentfish)
+
 A feed parsing and notification daemon.
 
 Note: This is more of a personal project- use at your own risk.
